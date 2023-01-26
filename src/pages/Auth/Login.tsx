@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { AuthKit } from '../../packages/auth-kit/AuthKit';
 import { useIonAlert } from '@ionic/react';
 import { useHistory } from 'react-router-dom';
-
+import { IonButton } from '@ionic/react';
 export default function Login() {
 
     const history = useHistory()
@@ -86,7 +86,7 @@ export default function Login() {
                         type="password"
                         placeholder='Contraseña'
                         onChange={(value: any) => getDataForm("password", value)}
-                        
+
                         style={{
                             borderRadius: 15,
                             padding: 10,
@@ -99,24 +99,16 @@ export default function Login() {
                         fontSize: 10
                     }}>¿Olvidaste tu contraseña?</span>
                 </div>
-                <button
-                onClick={() => onSignInPressed(dataForm.email, dataForm.password)}
-                style={{
-                    padding: 10,
-                    borderRadius: 15,
-                    backgroundColor: '#E98607',
-                    color: '#FFFFFF',
-                    width: 150
-                }}>ENTRAR</button>
-            <br />
-            {/* <button
-                onClick={() => history.push("/registrarse")}
-                style={{
-                    padding: 10,
-                    borderRadius: 15,
-                    color: '#000000',
-                    width: 150
-                }}>REGISTRARSE</button> */}
+                <div style={{
+                    display: 'grid',
+                    placeItems: 'center'
+                }}>
+                    <IonButton
+                        onClick={() => onSignInPressed(dataForm.email, dataForm.password)}>ENTRAR</IonButton>
+                    <br />
+                    <IonButton
+                        onClick={() => history.push("/registrarse")}>REGISTRARSE</IonButton>
+                </div>
             </div>
         </div>
     )

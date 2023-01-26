@@ -1,8 +1,9 @@
 import { useState } from "react"
 import { AuthKit } from '../../packages/auth-kit/AuthKit';
-import { useIonToast } from '@ionic/react';
+import { IonButton, useIonToast } from '@ionic/react';
 import { checkmark } from 'ionicons/icons';
 import { useIonAlert } from '@ionic/react';
+import { IonInput, IonItem, IonLabel } from '@ionic/react';
 
 export default function Register() {
 
@@ -148,15 +149,8 @@ export default function Register() {
                     <br />
                 </div>
             </div>
-            <button
-                onClick={() => onSignUpPressed(dataForm.email, dataForm.username)}
-                style={{
-                    padding: 10,
-                    borderRadius: 15,
-                    backgroundColor: '#E98607',
-                    color: '#FFFFFF',
-                    width: 150
-                }}>ENTRAR</button>
+            <IonButton
+                onClick={() => onSignUpPressed(dataForm.email, dataForm.username)}>ENTRAR</IonButton>
         </div>
     )
 }

@@ -3,10 +3,11 @@ import { AuthKit } from "../../packages/auth-kit/AuthKit"
 import {
   IonHeader,
   IonToolbar,
-  IonBackButton,
   IonButtons,
+  IonIcon,
   IonList,
-  IonTitle
+  IonTitle,
+  IonButton,
 } from '@ionic/react';
 import { ChatKit } from "../../packages/chat-kit/ChatKit";
 import ChatUserList from "../../components/UI/Chat/ChatUserList";
@@ -14,6 +15,7 @@ import { useHistory } from "react-router-dom";
 import io from 'socket.io-client'
 import './ChatsEstilos.css'
 import ChatSkeleton from "../../components/UI/Chat/ChatSkeleton";
+import { createOutline, notificationsOutline } from 'ionicons/icons';
 
 export default function ChatContainer() {
 
@@ -31,13 +33,15 @@ export default function ChatContainer() {
 
     Auth.validateToken()
 
-    Chat.getUserList().then((res) => res.json()).then((data: any) => {
+    Chat.getUserList().then((res) => res.json()).then(async (data: any) => {
 
       const listData = data.message
 
       const currentUser: any = Auth.getCurrentUser()
 
       const id = currentUser.user_id
+
+      await Auth.putUserConnection(id)
 
       setCurrentUser(id)
 
@@ -64,18 +68,23 @@ export default function ChatContainer() {
 
     const message_room_data = await Chat.verifyMessageRoom(messageRoomData)
 
-    const data = await Auth.getUser({ id: messageRoomData.id_usuario_2 })
+    const { data } = await Auth.getUser({ id: messageRoomData.id_usuario_2 })
 
-    const message_room = { ...message_room_data.data, nombre: data.data.message.nombre }
+    console.log(data)
 
-    const set_date_message_room = { ...message_room, last_connection: data.data.message.last_connection }
+    const message_room = {
+      ...message_room_data.data,
+      user_to_data: data.message
+    }
+
+    console.log(message_room)
 
     if (message_room_data.data.ok && message_room_data.data.message == null) {
       try {
         const room = await Chat.createMessageRoom(messageRoomData)
 
         if (room.data.ok) {
-          history.push({ pathname: '/chat', state: { data: set_date_message_room } })
+          history.push({ pathname: '/chat', state: { data: message_room } })
         }
       } catch (error) {
         console.log("Error al crear el messageRoom")
@@ -86,16 +95,41 @@ export default function ChatContainer() {
 
   }
 
+  const exit_app = () => {
+    Auth.loggOut()
+  }
+
   return (
     <>
-      <IonHeader>
         <IonToolbar>
-          <IonButtons slot="chat">
-            <IonBackButton />
+          <IonButtons slot="start">
+            <IonButton>
+              <IonIcon slot="icon-only" md={notificationsOutline}></IonIcon>
+            </IonButton>
           </IonButtons>
-          <IonTitle>Lista de usuarios</IonTitle>
+          <IonTitle>
+            <img src="https://picsum.photos/80/80?random=1" alt="user" height={50} style={{
+              borderRadius: 50
+            }} />
+          </IonTitle>
+          <IonButtons slot="end">
+            <IonButton>
+              <IonIcon slot="icon-only" md={createOutline}></IonIcon>
+            </IonButton>
+          </IonButtons>
         </IonToolbar>
-      </IonHeader>
+        <div>
+          <br />
+        <span style={{
+          padding: 10,
+          fontSize: 35,
+          fontWeight: 'bolder',
+          color: "#00194a"
+        }}>
+          Chats
+        </span>
+      </div>
+      <br />
       {loading ? <div>
         <IonList style={{ minHeight: '87vh' }}>
           {
@@ -118,6 +152,7 @@ export default function ChatContainer() {
                   last_connection={"Última conexión " + formattedDate}
                   setChatRoom={() => getUserFromList(item)}
                   isActive={item.isActive}
+                  date={date}
                 />
               )
             })

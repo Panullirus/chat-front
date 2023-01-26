@@ -84,4 +84,7 @@ export class AuthKit{
         return await axios.post('http://localhost:3000/user_find', id)
     }
 
+    loggOut(){
+        localStorage.clear()
+    }
 }

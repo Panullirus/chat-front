@@ -1,10 +1,22 @@
 ion-toolbar {
-    --background: #2b3595;
-    --color: white;
+    --background: #FFFFFF;
+    --color: black;
 
     --min-height: 50px;
     --padding-top: 5px;
     --padding-bottom: 10px;
+}
+
+ion-title {
+    text-align: center;
+}
+
+ion-label {
+    color: #1d305d;
+}
+
+ion-icon {
+    color: #00194a;
 }
 
 input {
@@ -15,6 +27,24 @@ input {
     padding: 20px;
     width: 100%;
 }
+
+.col-container{
+    align-self: center;
+    text-align: center;
+}
+
+.profile-image {
+    border-radius: 50%;
+    height: 190px;
+    margin-bottom: 20px;
+}
+
+.modal-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 
 input:focus {
     outline: none;
