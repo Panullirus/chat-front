@@ -4,7 +4,8 @@ import { IonButton, useIonToast } from '@ionic/react';
 import { checkmark } from 'ionicons/icons';
 import { useIonAlert } from '@ionic/react';
 import { IonInput, IonItem, IonLabel } from '@ionic/react';
-
+import ToolbarBack from "src/components/UI/Ionic/ToolbarBack";
+import TyC from "../Profile/TyC";
 export default function Register() {
 
     const [presentAlert] = useIonAlert()
@@ -18,13 +19,16 @@ export default function Register() {
         username: ''
     })
 
+    const [email, setEmail] = useState('')
+    const [username, setUsername] = useState('')
+
     const [password, setPassword] = useState('')
     const [passwordError, setPasswordError] = useState('')
 
     const [secondPassword, setSecondPassword] = useState('')
     const [secondPasswordError, setSecondPasswordError] = useState('')
 
-    async function onSignUpPressed(email: string, username: string) {
+    async function onSignUpPressed() {
 
         try {
             if (!Auth.validateEmail(email)) {
@@ -73,84 +77,68 @@ export default function Register() {
     }
 
     return (
-        <div style={{
-            paddingTop: '200px',
-            display: 'grid',
-            placeItems: 'center',
-        }}>
+        <div>
+            <ToolbarBack 
+            url="ingresar"
+            />
             <div style={{
-                paddingBottom: 50
+                paddingTop: '25px',
+                display: 'grid',
+                placeItems: 'center',
             }}>
-                <div>
-                    <input
-                        type="text"
-                        placeholder='Correo electrónico'
-                        onChange={(value: any) => getDataForm("email", value.target.value)}
-                        style={{
-                            borderRadius: 15,
-                            padding: 10,
-                            width: 250
-                        }}
-                    />
-                </div>
+            <img src="https://cdn-icons-png.flaticon.com/512/9263/9263537.png" alt="login" height={150} />
+                <br />
                 <div style={{
-                    paddingTop: 25
-                }}></div>
-                <div>
-                    <input
-                        type="text"
-                        placeholder='Nombre'
-                        onChange={(value: any) => getDataForm("username", value.target.value)}
-                        style={{
-                            borderRadius: 15,
-                            padding: 10,
-                            width: 250
-                        }}
-                    />
-                </div>
-                <div style={{
-                    paddingTop: 25
-                }}></div>
-                <div>
-                    <input
-                        type="text"
-                        placeholder='Contraseña'
-                        onChange={e => setPassword(e.target.value)}
-                        onBlur={() => validatePassword(password)}
-                        style={{
-                            borderRadius: 15,
-                            padding: 10,
-                            width: 250
-                        }}
-                    />
-                    {passwordError && <p style={{
-                        fontSize: 12,
-                        color: 'red'
-                    }}>{passwordError}</p>}
-                </div>
-                <div style={{
-                    paddingTop: 25
+                    paddingBottom: 10
                 }}>
-                    <input
-                        type="text"
-                        placeholder='Confirmar contraseña'
-                        onChange={e => setSecondPassword(e.target.value)}
-                        onBlur={() => validatePasswords(password, secondPassword)}
-                        style={{
-                            borderRadius: 15,
-                            padding: 10,
-                            width: 250
-                        }}
-                    />
-                    {secondPasswordError && <p style={{
-                        fontSize: 12,
-                        color: 'red'
-                    }}>{secondPasswordError}</p>}
-                    <br />
+                    <div>
+                        <IonItem>
+                            <IonLabel position="floating">Correo electrónico</IonLabel>
+                            <IonInput placeholder="ejemplo@correo.com" onIonInput={(value: any) => setEmail(value.target.value)} ></IonInput>
+                        </IonItem>
+                    </div>
+                    <div style={{
+                        paddingTop: 25
+                    }}></div>
+                    <div>
+                        <IonItem>
+                            <IonLabel position="floating">Nombre completo</IonLabel>
+                            <IonInput placeholder="tu nombre completo" onIonInput={(value: any) => setUsername(value.target.value)} ></IonInput>
+                        </IonItem>
+                    </div>
+                    <div style={{
+                        paddingTop: 25
+                    }}></div>
+                    <div>
+                        <IonItem>
+                            <IonLabel position="floating">Contraseña</IonLabel>
+                            <IonInput placeholder="Contraseña123" type="password" onBlur={() => validatePassword(password)} onIonInput={(e: any) => setPassword(e.target.value)} ></IonInput>
+                        </IonItem>
+                        {passwordError && <p style={{
+                            fontSize: 12,
+                            color: 'red'
+                        }}>{passwordError}</p>}
+                    </div>
+                    <div style={{
+                        paddingTop: 25
+                    }}>
+                        <IonItem>
+                            <IonLabel position="floating">Confiram tu contraseña</IonLabel>
+                            <IonInput placeholder="Contraseña123" type="password" onBlur={() => validatePasswords(password, secondPassword)} onIonInput={(e: any) => setSecondPassword(e.target.value)}></IonInput>
+                        </IonItem>
+                        {secondPasswordError && <p style={{
+                            fontSize: 12,
+                            color: 'red'
+                        }}>{secondPasswordError}</p>}
+                        <br />
+                    </div>
+                    <TyC/>
+                    <IonButton
+                    onClick={() => onSignUpPressed()} style={{
+                        width: "100%"
+                    }}>ENTRAR</IonButton>
                 </div>
             </div>
-            <IonButton
-                onClick={() => onSignUpPressed(dataForm.email, dataForm.username)}>ENTRAR</IonButton>
         </div>
     )
 }

@@ -1,4 +1,5 @@
 import { MessageContent } from "../../../packages/interfaces"
+import IonicLoading from "../Ionic/IonicLoading"
 
 export default function ChatMessageContainer(props: MessageContent): JSX.Element {
 
@@ -26,12 +27,12 @@ export default function ChatMessageContainer(props: MessageContent): JSX.Element
                     }}
                         onClick={props.onSend}
                     >
-                        <span style={{ fontSize: 18, overflow: 'break-all', color: '#293d66' }}>{props.contenido}
+                        <span style={{ fontSize: 18, overflow: 'break-spacesf', color: '#999696' }}>{props.contenido}
                             <br />
-                            <span style={{
+                            {props.loading ? <span style={{
                                 fontSize: 12,
-                                color: '#ccd0dd',
-                            }}>{props.hora_envio}</span>
+                                color: '#999696',
+                            }}>{props.hora_envio}</span> : <IonicLoading/>}
                         </span>
                     </div>
                 </div>
@@ -48,10 +49,9 @@ export default function ChatMessageContainer(props: MessageContent): JSX.Element
                 paddingLeft: 30
             }}>
                 <div style={{
-                    display: 'flex',
-                    flexWrap: 'wrap',
+                    wordWrap: 'break-word',
                     backgroundColor: '#ff0043',
-                    width: 'auto',
+                    maxWidth: '80%',
                     height: 'auto',
                     color: '#ffe2ea',
                     padding: 12,
@@ -66,7 +66,6 @@ export default function ChatMessageContainer(props: MessageContent): JSX.Element
                         <span style={{
                             fontSize: 12,
                             color: '#ccd0dd',
-                            paddingLeft: 30
                         }}>{props.hora_envio}</span>
                     </span>
                 </div>

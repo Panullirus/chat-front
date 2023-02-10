@@ -24,6 +24,10 @@ import './theme/variables.css';
 import Register from './pages/Auth/Register';
 import ChatContainer from './pages/Chat/ChatContainer';
 import Chat from './pages/Chat/Chat';
+import User from './pages/Profile/User';
+import ProfileSkeleton from './components/UI/Profile/ProfileSkeleton';
+import ChangePassword from './components/UI/Profile/Password/ChangePassword';
+import ChangePasswordLogin from './pages/Auth/ChangePasswordLogin';
 
 setupIonicReact();
 
@@ -32,19 +36,29 @@ const App: React.FC = () => (
     <IonReactRouter>
       <IonRouterOutlet>
         <Route exact path="/ingresar">
-          <Login/>
+          <Login />
         </Route>
         <Route exact path="/registrarse">
-          <Register/>
+          <Register />
         </Route>
         <Route exact path="/chats">
-          <ChatContainer/>
+          <ChatContainer />
         </Route>
         <Route exact path="/chat">
-          <Chat/>
+          <Chat />
         </Route>
-        <Route exact path="/" render={() => <Redirect to="/chats"/>}>
-
+        <Route exact path="/" render={() => <Redirect to="/chats" />}></Route>
+        <Route exact path="/perfil">
+          <User />
+        </Route>
+        <Route exact path="/loading">
+          <ProfileSkeleton />
+        </Route>
+        <Route exact path="/contraseña">
+          <ChangePassword />
+        </Route>
+        <Route exact path="/check/account">
+          <ChangePasswordLogin/>
         </Route>
       </IonRouterOutlet>
     </IonReactRouter>

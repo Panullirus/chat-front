@@ -1,7 +1,8 @@
-import { IonItem, IonLabel, IonAvatar, IonThumbnail } from '@ionic/react';
+import { IonItem, IonLabel, IonThumbnail } from '@ionic/react';
 import { UserChatList } from '../../../packages/interfaces';
 import { ChatKit } from 'src/packages/chat-kit/ChatKit';
 import { useEffect, useState } from 'react';
+
 
 export default function ChatUserList(props: UserChatList): JSX.Element {
 
@@ -42,32 +43,11 @@ export default function ChatUserList(props: UserChatList): JSX.Element {
           }}>{props.name}</span>
         </IonLabel>
         <br />
-        <IonLabel>Hola como estás yo...</IonLabel>
+        <IonLabel>{props?.last_message}</IonLabel>
       </div>
-      <IonLabel></IonLabel>
-      <IonLabel></IonLabel>
-      <IonLabel>
-        <span>{lastConnection}</span>
-      </IonLabel>
+      <IonThumbnail slot='end' style={{ 'width': '100px', 'placeItems' : 'end', 'display': 'inherit'}}>
+        {props.isActive === 'online' ? <span>En línea</span> : <span>{lastConnection}</span>}
+      </IonThumbnail>
     </IonItem>
-    // <IonItem key={props.index} onClick={props.setChatRoom}>
-    //   <IonAvatar slot="start">
-    //     <img src={'https://picsum.photos/80/80?random=' + props.index} alt="avatar" style={{
-    //       height: 80,
-    //       width: 80
-    //     }}/>
-    //   </IonAvatar>
-    //   <IonLabel>
-    //     <span style={{
-    //       fontWeight: 'semibold'
-    //     }}>{props.name} </span><br />
-    //     <span style={{
-    //       color: 'gray'
-    //     }}>hola</span>
-    //   </IonLabel>
-    //   <IonLabel>
-    //     <span>{lastConnection}</span>
-    //   </IonLabel>
-    // </IonItem>
   )
 }

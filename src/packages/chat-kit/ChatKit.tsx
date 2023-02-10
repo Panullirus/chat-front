@@ -25,10 +25,9 @@ export class ChatKit {
             year: 'numeric'
         })
 
-        console.log(formattedDate)
 
         if (diff === 0) {
-            return `Hoy`
+            return hora_envio
         } else if (diff === 1) {
             return `Ayer`
         } else if (diff === 2) {
@@ -73,5 +72,9 @@ export class ChatKit {
 
     async sendMessage(message: any) {
         return await axios.post('http://localhost:3000/send_message', message)
+    }
+
+    async updateUser(user_data: any){
+        return await axios.post('http://localhost:3000/update_user', user_data)
     }
 }

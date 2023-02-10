@@ -1,43 +1,55 @@
 import { useEffect, useState } from "react"
 import { AuthKit } from "../../packages/auth-kit/AuthKit"
-import {
-  IonHeader,
-  IonToolbar,
-  IonButtons,
-  IonIcon,
-  IonList,
-  IonTitle,
-  IonButton,
-} from '@ionic/react';
 import { ChatKit } from "../../packages/chat-kit/ChatKit";
-import ChatUserList from "../../components/UI/Chat/ChatUserList";
 import { useHistory } from "react-router-dom";
-import io from 'socket.io-client'
 import './ChatsEstilos.css'
 import ChatSkeleton from "../../components/UI/Chat/ChatSkeleton";
-import { createOutline, notificationsOutline } from 'ionicons/icons';
+import { createOutline, notificationsOutline, exitOutline } from 'ionicons/icons';
+import ToolbarChats from "src/components/UI/Chat/ToolbarChats";
+import ChatList from "src/components/UI/Chat/ChatList";
+import { SocketKit } from "src/packages/socket-kit/SocketKit";
+import { UserJWTProps } from "src/packages/interfaces";
+import io from 'socket.io-client';
+
+const socket = io('http://localhost:3001', {
+  transports: ['websocket'],
+});
 
 export default function ChatContainer() {
 
   const Auth = new AuthKit()
+  const Socket = new SocketKit()
   const Chat = new ChatKit()
   const [users, setUsers] = useState([])
   const [currentUser, setCurrentUser] = useState([]);
   const history = useHistory()
   const [loading, setLoading] = useState(false)
-  const socket = io('http://localhost:3001', {
-    transports: ["websocket"]
-  });
 
   useEffect(() => {
+    socket.on('new_user_connected', (data: any) => {
+      console.log(data)
+    });
+  }, [])
+
+  useEffect(() => {
+
+    const currentUser: any = Auth.getCurrentUser()
+
+    // const update_connection = {
+    //   id: currentUser.user_id,
+    //   last_connection: "online"
+    // }
+
+    // Auth.putUserConnection(update_connection)
+
+
+    Socket.setNewUserConnected(currentUser)
 
     Auth.validateToken()
 
     Chat.getUserList().then((res) => res.json()).then(async (data: any) => {
 
       const listData = data.message
-
-      const currentUser: any = Auth.getCurrentUser()
 
       const id = currentUser.user_id
 
@@ -51,10 +63,6 @@ export default function ChatContainer() {
 
       setLoading(true)
 
-      socket.on('message_data', (data) => {
-        console.log("mensaje => ", data)
-      })
-
     })
 
   }, [])
@@ -65,16 +73,15 @@ export default function ChatContainer() {
       id_usuario_2: user.id
     }
 
-
     const message_room_data = await Chat.verifyMessageRoom(messageRoomData)
 
-    const { data } = await Auth.getUser({ id: messageRoomData.id_usuario_2 })
+    console.log(messageRoomData.id_usuario_2)
 
-    console.log(data)
+    const data = await Auth.getUser(messageRoomData.id_usuario_2)
 
     const message_room = {
       ...message_room_data.data,
-      user_to_data: data.message
+      user_to_data: data.data.message
     }
 
     console.log(message_room)
@@ -95,31 +102,15 @@ export default function ChatContainer() {
 
   }
 
-  const exit_app = () => {
-    Auth.loggOut()
-  }
-
   return (
     <>
-        <IonToolbar>
-          <IonButtons slot="start">
-            <IonButton>
-              <IonIcon slot="icon-only" md={notificationsOutline}></IonIcon>
-            </IonButton>
-          </IonButtons>
-          <IonTitle>
-            <img src="https://picsum.photos/80/80?random=1" alt="user" height={50} style={{
-              borderRadius: 50
-            }} />
-          </IonTitle>
-          <IonButtons slot="end">
-            <IonButton>
-              <IonIcon slot="icon-only" md={createOutline}></IonIcon>
-            </IonButton>
-          </IonButtons>
-        </IonToolbar>
-        <div>
-          <br />
+      <ToolbarChats
+        startIcon={exitOutline}
+        image={true}
+        endIcon={createOutline}
+      />
+      <div>
+        <br />
         <span style={{
           padding: 10,
           fontSize: 35,
@@ -131,33 +122,10 @@ export default function ChatContainer() {
       </div>
       <br />
       {loading ? <div>
-        <IonList style={{ minHeight: '87vh' }}>
-          {
-            users.map((item: any, index: any) => {
-
-              const date = new Date(item.last_connection);
-              const formattedDate = date.toLocaleString('es-MX', {
-                month: 'short',
-                day: 'numeric',
-                hour: 'numeric',
-                minute: 'numeric',
-                hour12: true
-              })
-
-              return (
-                <ChatUserList
-                  key={index}
-                  name={item.nombre}
-                  index={item.id}
-                  last_connection={"Última conexión " + formattedDate}
-                  setChatRoom={() => getUserFromList(item)}
-                  isActive={item.isActive}
-                  date={date}
-                />
-              )
-            })
-          }
-        </IonList>
+        <ChatList
+          users={users}
+          getUserFromList={getUserFromList}
+        />
       </div> : <ChatSkeleton />}
     </>
   )

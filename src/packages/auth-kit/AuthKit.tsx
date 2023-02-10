@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { useHistory } from "react-router-dom";
 import jwt_decode from "jwt-decode";
-import { User } from '../interfaces';
+import { ChangePassword, User, UserJWTProps } from '../interfaces';
 
 export class AuthKit{
 
@@ -69,7 +69,7 @@ export class AuthKit{
     }
 
     decoteJwt(jwt: string){
-        const decode = jwt_decode(jwt)
+        const decode: UserJWTProps = jwt_decode(jwt)
 
         return decode
     }
@@ -81,10 +81,17 @@ export class AuthKit{
     }
 
     async getUser(id: any){
-        return await axios.post('http://localhost:3000/user_find', id)
+        const user = {
+            id: id
+        }
+        return await axios.post('http://localhost:3000/user_find', user)
     }
 
     loggOut(){
         localStorage.clear()
+    }
+
+    async changePassword(input: ChangePassword){
+        return await axios.post('http://localhost:3000/change_password', input)
     }
 }

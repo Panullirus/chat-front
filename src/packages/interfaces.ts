@@ -1,12 +1,67 @@
+import { Ref } from "react"
+
 export interface MessageContent {
     id?: number
     contenido: string
     current_user?: number
     id_usuario_envia: number
     conversaciones_id?: number
-    fecha_envio: string
+    fecha_envio?: any
     hora_envio?: string
+    loading?: boolean
     onSend?: () => void
+}
+
+export interface DateChat {
+    date: string
+}
+
+export interface MessageSocketContent {
+    contenido: string
+    conversaciones_id: number
+    id: number
+    id_usuario_envia: number
+    fecha_envio: string
+}
+
+export interface ChatListProps{
+    users: any[]
+    getUserFromList: (items: []) => void
+}
+
+export interface ToolbarProps{
+    title?: string
+    url: string
+}
+
+export interface ContainerProps{
+    children?: React.ReactNode
+}
+
+export interface ProfileCardProps{
+    name: string
+}
+
+export interface ChatInputProps{
+    onKeyDown: (event: any) => void
+    value: number | string | readonly string[]
+    onChange: (event: any) => void
+}
+
+export interface ChatMessageListProps{
+    messages: any[]
+    currentUser: number
+    loading: boolean
+    contentRef: Ref<HTMLIonContentElement>
+}
+
+export interface ToolbarChat{
+    startIcon?: string
+    title?: string
+    image?: boolean
+    backButton?: boolean
+    backButtonName?: string
+    endIcon?: string
 }
 
 export interface AlertProps {
@@ -35,12 +90,41 @@ export interface User {
     nombre: string
 }
 
+export interface UserUpdateDataProps {
+    id: number
+    email: string
+    name?: string
+    password?: string
+}
+
+export interface ChangePassword {
+    id: number
+    correo: string
+    lastPassword: string
+    newPassword: string
+}
+
+export interface LastMessageChat {
+    id_usuario_envia: number,
+    contenido: string,
+    conversaciones_id?: number
+}
+
+export interface UserJWTProps{
+    user_id: number
+    role: number
+    iat: number
+    exp: number
+}
+
 export interface UserChatList {
     name: string,
     setChatRoom: () => void,
     index: number,
     isActive: string,
     date: any,
+    onLine?: string
+    last_message: string
     last_connection: string
 }
 
