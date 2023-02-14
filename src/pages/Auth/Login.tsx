@@ -2,8 +2,9 @@ import { useState } from 'react';
 import { AuthKit } from '../../packages/auth-kit/AuthKit';
 import { useIonAlert } from '@ionic/react';
 import { useHistory } from 'react-router-dom';
-import { IonButton, IonButtons } from '@ionic/react';
+import { IonButton } from '@ionic/react';
 import { IonItem, IonLabel, IonInput, } from '@ionic/react';
+import LoginFirebase from './LoginFirebase';
 
 export default function Login() {
 
@@ -23,8 +24,6 @@ export default function Login() {
 
 
     async function onSignInPressed() {
-        console.log(email, password)
-
         try {
             if (!Auth.validateEmail(email)) {
                 return (
@@ -104,6 +103,8 @@ export default function Login() {
                         onClick={() => history.push("/registrarse")} style={{
                             width: "100%"
                         }}>REGISTRARSE</IonButton>
+                    <LoginFirebase
+                    />
                 </div>
             </div>
         </div>

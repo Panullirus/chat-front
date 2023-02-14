@@ -18,16 +18,6 @@ export default function ChatList(props: ChatListProps): JSX.Element {
             {
                 props.users.map((item: any, index: any) => {
 
-                    const date = new Date(item.last_connection);
-
-                    const formattedDate = date.toLocaleString('es-MX', {
-                        month: 'short',
-                        day: 'numeric',
-                        hour: 'numeric',
-                        minute: 'numeric',
-                        hour12: true
-                    })
-
                     const current_user: UserJWTProps = Auth.getCurrentUser()
 
                     const getChatRoom = {
@@ -46,10 +36,9 @@ export default function ChatList(props: ChatListProps): JSX.Element {
                             last_message=""
                             name={item.nombre}
                             index={item.id}
-                            last_connection={"Última conexión " + formattedDate}
+                            last_connection={item.last_connection}
                             setChatRoom={() => props.getUserFromList(item)}
                             isActive={item.last_connection}
-                            date={date}
                         />
                     )
                 })

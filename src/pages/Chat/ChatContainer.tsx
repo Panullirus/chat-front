@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { AuthKit } from "../../packages/auth-kit/AuthKit"
 import { ChatKit } from "../../packages/chat-kit/ChatKit";
 import { useHistory } from "react-router-dom";
@@ -21,26 +21,42 @@ export default function ChatContainer() {
   const Socket = new SocketKit()
   const Chat = new ChatKit()
   const [users, setUsers] = useState([])
-  const [currentUser, setCurrentUser] = useState([]);
+  const [currentUserChatId, setCurrentUserChatId] = useState([]);
   const history = useHistory()
+  const [uid, setUid] = useState<string>('')
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
-    socket.on('new_user_connected', (data: any) => {
-      console.log(data)
+    const handleBeforeUnload = async () => {
+
+      const currentUser: any = Auth.getCurrentUser()
+
+      const setDate = {
+        id: currentUser.user_id,
+        last_connection: Date()
+      }
+
+      await Auth.putUserConnection(setDate)
+
+      socket.emit('disconnecting');
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, [socket]);
+
+  useEffect(() => {
+    socket.on('new_user_connected', () => {
+      socket.emit('new uers')
     });
   }, [])
 
   useEffect(() => {
 
     const currentUser: any = Auth.getCurrentUser()
-
-    // const update_connection = {
-    //   id: currentUser.user_id,
-    //   last_connection: "online"
-    // }
-
-    // Auth.putUserConnection(update_connection)
 
 
     Socket.setNewUserConnected(currentUser)
@@ -53,13 +69,27 @@ export default function ChatContainer() {
 
       const id = currentUser.user_id
 
+      const uid = currentUser.sub
+
       await Auth.putUserConnection(id)
 
-      setCurrentUser(id)
 
-      const filter: any = listData.filter((obj: any) => obj.id !== id)
+      if (currentUser?.sub) {
+        const filter: any = listData.filter((obj: any) => obj.uidGoogle !== uid)
 
-      setUsers(filter)
+        const idGoogelChat = await Auth.getGoogleIdChat(currentUser.sub)
+
+        setCurrentUserChatId(idGoogelChat.data.message.id)
+
+        setUsers(filter)
+      } else {
+
+        setCurrentUserChatId(id)
+
+        const filter: any = listData.filter((obj: any) => obj.id !== id)
+
+        setUsers(filter)
+      }
 
       setLoading(true)
 
@@ -69,7 +99,7 @@ export default function ChatContainer() {
 
   const getUserFromList = async (user: any) => {
     const messageRoomData = {
-      id_usuario_1: currentUser,
+      id_usuario_1: currentUserChatId,
       id_usuario_2: user.id
     }
 
@@ -84,13 +114,14 @@ export default function ChatContainer() {
       user_to_data: data.data.message
     }
 
-    console.log(message_room)
-
     if (message_room_data.data.ok && message_room_data.data.message == null) {
       try {
+
         const room = await Chat.createMessageRoom(messageRoomData)
 
+
         if (room.data.ok) {
+
           history.push({ pathname: '/chat', state: { data: message_room } })
         }
       } catch (error) {

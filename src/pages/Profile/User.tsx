@@ -20,8 +20,6 @@ export default function User(): JSX.Element {
         const getUser = async () => {
             const current_user: UserJWTProps = Auth.getCurrentUser()
 
-            console.log(current_user)
-
             setUserID(current_user.user_id)
 
             const user = await Auth.getUser(current_user.user_id)

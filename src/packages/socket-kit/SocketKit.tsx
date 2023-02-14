@@ -51,6 +51,12 @@ export class SocketKit {
   }
 
   async setNewUserConnected(user: any) {
-    return axios.post('http://localhost:3000/user_connected', user);
+    
+    const user_connections = {
+      id: user.user_id,
+      last_connection: null
+    }
+
+    return axios.post('http://localhost:3000/user_connected', user_connections);
   }
 }

@@ -84,7 +84,8 @@ export interface User {
     correo: string
     image_uri?: string
     user_to?: string,
-    clave: string
+    clave: string | null
+    uidGoogle?: string | null
     chatUserContainerID?: number,
     MessageRoomsID?: number
     nombre: string
@@ -122,7 +123,7 @@ export interface UserChatList {
     setChatRoom: () => void,
     index: number,
     isActive: string,
-    date: any,
+    date?: any,
     onLine?: string
     last_message: string
     last_connection: string

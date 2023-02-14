@@ -13,10 +13,10 @@ export default function ChatUserList(props: UserChatList): JSX.Element {
   useEffect(() => {
     const connection = async () => {
 
-      if (props.isActive === 'live') {
+      if (props.last_connection === null) {
         setLastConnection('En linea')
       } else {
-        const LastConnection = await Chat.calculateDiffDays(props.date)
+        const LastConnection = await Chat.calculateDiffDays(props.last_connection)
         setLastConnection(LastConnection)
       }
 
@@ -32,7 +32,7 @@ export default function ChatUserList(props: UserChatList): JSX.Element {
       <IonThumbnail slot="start">
         <img alt="Silhouette of mountains" src={"https://picsum.photos/80/80?random=" + number} style={{
           borderRadius: 50
-        }}/>
+        }} />
       </IonThumbnail>
       <div>
         <IonLabel>
@@ -45,8 +45,8 @@ export default function ChatUserList(props: UserChatList): JSX.Element {
         <br />
         <IonLabel>{props?.last_message}</IonLabel>
       </div>
-      <IonThumbnail slot='end' style={{ 'width': '100px', 'placeItems' : 'end', 'display': 'inherit'}}>
-        {props.isActive === 'online' ? <span>En línea</span> : <span>{lastConnection}</span>}
+      <IonThumbnail slot='end' style={{ 'width': '100px', 'placeItems': 'end', 'display': 'inherit' }}>
+        <span>{lastConnection}</span>
       </IonThumbnail>
     </IonItem>
   )

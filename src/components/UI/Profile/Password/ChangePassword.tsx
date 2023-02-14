@@ -44,11 +44,7 @@ export default function ChangePasswordInput() {
                     newPassword: newPassword
                 }
 
-                console.log(input)
-
                 const req = await Auth.changePassword(input)
-
-                console.log(req.data.message)
 
                 if (req.data.message === null) {
                     presentToast({

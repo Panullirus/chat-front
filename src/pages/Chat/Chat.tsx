@@ -39,10 +39,17 @@ export default function Chat() {
 
         const user_data: any = await Auth.getCurrentUser()
 
+        if (user_data?.sub) {
+            const idGoogelChat = await Auth.getGoogleIdChat(user_data?.sub)
+
+            setUser(idGoogelChat.data.message.id)
+        }else{
+            setUser(user_data.user_id)
+        }
+
         setChatRoom(data_from_chats.state.data.message.id)
         setNombre(data_from_chats.state.data.user_to_data.nombre)
         setCorreo(data_from_chats.state.data.user_to_data.correo)
-        setUser(user_data.user_id)
 
         const chatRoomID = data_from_chats.state.data.message.id
 
@@ -65,8 +72,13 @@ export default function Chat() {
         let isCancelled = false
 
         if (!isCancelled) {
-            socket.on('message_data', (message: MessageSocketContent[]) => {
+
+            const data_from_chats: HistoryRoute = chat
+
+            socket.on('message_data', (message: MessageSocketContent) => {
+
                 getChats()
+
             });
         }
 
