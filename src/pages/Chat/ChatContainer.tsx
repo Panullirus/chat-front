@@ -105,7 +105,7 @@ export default function ChatContainer() {
 
     const message_room_data = await Chat.verifyMessageRoom(messageRoomData)
 
-    console.log(messageRoomData.id_usuario_2)
+    console.log(message_room_data)
 
     const data = await Auth.getUser(messageRoomData.id_usuario_2)
 

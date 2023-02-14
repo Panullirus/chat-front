@@ -6,6 +6,7 @@ import { useIonAlert } from '@ionic/react';
 import { IonInput, IonItem, IonLabel } from '@ionic/react';
 import ToolbarBack from "src/components/UI/Ionic/ToolbarBack";
 import TyC from "../Profile/TyC";
+import axios from "axios";
 export default function Register() {
 
     const [presentAlert] = useIonAlert()
@@ -30,30 +31,40 @@ export default function Register() {
 
     async function onSignUpPressed() {
 
-        try {
-            if (!Auth.validateEmail(email)) {
-                return (
-                    presentAlert({
-                        header: 'Correo incorrecto',
-                        message: 'Ingresa un correo válido',
-                        buttons: ['Aceptar'],
-                    })
-                )
-            } else {
-                if (await Auth.register(email, password, username)) {
-                    return (
-                        presentToast({
-                            message: 'Te haz registrado exitosamente!!',
-                            duration: 2000,
-                            icon: checkmark
-                        })
-                    )
-                }
-            }
-        } catch (error) {
-
+        const findEmail = {
+            correo: email
         }
 
+        const check_email = await axios.post('http://localhost:3000/user_email_find', findEmail)
+
+        if(check_email.data.ok){
+            alert('Correo ya registrado')
+        }else{
+            try {
+                if (!Auth.validateEmail(email)) {
+                    return (
+                        presentAlert({
+                            header: 'Correo incorrecto',
+                            message: 'Ingresa un correo válido',
+                            buttons: ['Aceptar'],
+                        })
+                    )
+                } else {
+                    if (await Auth.register(email, password, username)) {
+                        return (
+                            presentToast({
+                                message: 'Te haz registrado exitosamente!!',
+                                duration: 2000,
+                                icon: checkmark
+                            })
+                        )
+                    }
+                }
+            } catch (error) {
+                console.log(error)
+            }
+    
+        }
     }
 
     const validatePassword = (password: string) => {
