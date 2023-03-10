@@ -11,7 +11,6 @@ export default function User(): JSX.Element {
     const Auth = new AuthKit()
     const Socket = new SocketKit()
     const [name, setName] = useState<string>('')
-    const [nameImage, setNameImage] = useState<string>('')
     const [email, setEmail] = useState<string>('')
     const [password, setPassword] = useState<string>('')
     const [userID, setUserID] = useState<number>(0)
@@ -23,6 +22,8 @@ export default function User(): JSX.Element {
             setUserID(current_user.user_id)
 
             const user = await Auth.getUser(current_user.user_id)
+
+            console.log(current_user)
 
             setName(user.data.message.nombre)
             setEmail(user.data.message.correo)

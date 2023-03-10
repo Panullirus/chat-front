@@ -32,6 +32,7 @@ export interface ChatListProps{
 export interface ToolbarProps{
     title?: string
     url: string
+    image?: boolean
 }
 
 export interface ContainerProps{
@@ -43,9 +44,15 @@ export interface ProfileCardProps{
 }
 
 export interface ChatInputProps{
+    dataTyping?: {
+        nombre: string,
+        id: number
+    }
     onKeyDown: (event: any) => void
     value: number | string | readonly string[]
     onChange: (event: any) => void
+    onPress: () => void
+    currentUser: number | undefined
 }
 
 export interface ChatMessageListProps{

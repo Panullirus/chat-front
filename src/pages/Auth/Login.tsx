@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { AuthKit } from '../../packages/auth-kit/AuthKit';
 import { useIonAlert } from '@ionic/react';
 import { useHistory } from 'react-router-dom';
@@ -7,6 +7,15 @@ import { IonItem, IonLabel, IonInput, } from '@ionic/react';
 import LoginFirebase from './LoginFirebase';
 
 export default function Login() {
+
+    useEffect(() => {
+        const verify_token = localStorage.getItem('jwt')
+        const verify_id = localStorage.getItem('uid')
+
+        if(verify_id && verify_token){
+            history.push('/chats')
+        }
+    }, [])
 
     const history = useHistory()
 
@@ -45,6 +54,8 @@ export default function Login() {
                         )
                     }
 
+                    localStorage.setItem('uid', data.data.id)
+
                     history.push("/chats")
                 })
             }
@@ -60,10 +71,10 @@ export default function Login() {
 
 
     return (
-        <div style={{
-            marginTop: '120px',
+        <div className='form' style={{
             display: 'grid',
             placeItems: 'center',
+            paddingTop: 70
         }}>
             <img src="https://cdn-icons-png.flaticon.com/512/9263/9263544.png" alt="login" height={150} />
             <br />

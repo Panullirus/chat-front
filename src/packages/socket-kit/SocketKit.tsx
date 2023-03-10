@@ -1,8 +1,11 @@
 import axios from 'axios';
-import { LastMessageChat, MessageSocketContent, UserJWTProps, UserUpdateDataProps } from '../interfaces';
+import { MessageSocketContent, UserJWTProps, UserUpdateDataProps } from '../interfaces';
 import io from 'socket.io-client';
+import Environment from 'src/environment';
 
-const socket = io('http://localhost:3001', {
+const env = new Environment()
+
+const socket = io(`http://${env.SERVER_URI}:3001`, {
   transports: ['websocket'],
 });
 
@@ -57,6 +60,6 @@ export class SocketKit {
       last_connection: null
     }
 
-    return axios.post('http://localhost:3000/user_connected', user_connections);
+    return axios.post(`http://${env.SERVER_URI}:3000/user_connected`, user_connections);
   }
 }
