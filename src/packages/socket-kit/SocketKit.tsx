@@ -5,7 +5,7 @@ import Environment from 'src/environment';
 
 const env = new Environment()
 
-const socket = io(`http://${env.SERVER_URI}:3001`, {
+const socket = io(`https://${env.PROP_SOCKET_URI}:3001`, {
   transports: ['websocket'],
 });
 
@@ -60,6 +60,6 @@ export class SocketKit {
       last_connection: null
     }
 
-    return axios.post(`http://${env.SERVER_URI}:3000/user_connected`, user_connections);
+    return axios.post(`https://${env.PROP_URI}:3000/user_connected`, user_connections);
   }
 }

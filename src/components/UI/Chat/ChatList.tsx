@@ -9,10 +9,6 @@ export default function ChatList(props: ChatListProps): JSX.Element {
     const Chat = new ChatKit()
     const Auth = new AuthKit()
 
-    const checkChatRoom = async (getChatRoom: any) => {
-        await Chat.verifyMessageRoom(getChatRoom)
-    }
-
     return (
         <IonList style={{ minHeight: '87vh' }}>
             {
@@ -26,7 +22,7 @@ export default function ChatList(props: ChatListProps): JSX.Element {
                     }
 
 
-                    checkChatRoom(getChatRoom)
+                    Chat.verifyMessageRoom(getChatRoom)
 
                     // const last_message_content = localStorage.getItem()
 

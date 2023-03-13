@@ -14,7 +14,7 @@ import ToolbarBack from "src/components/UI/Ionic/ToolbarBack";
 
 const env = new Environment()
 
-const socket = io(`http://${env.SERVER_URI}:3001`, {
+const socket = io(`https://${env.PROP_SOCKET_URI}:3001`, {
     transports: ['websocket'],
 });
 

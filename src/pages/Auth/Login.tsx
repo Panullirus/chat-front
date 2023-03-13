@@ -5,6 +5,7 @@ import { useHistory } from 'react-router-dom';
 import { IonButton } from '@ionic/react';
 import { IonItem, IonLabel, IonInput, } from '@ionic/react';
 import LoginFirebase from './LoginFirebase';
+import { PushNotificationSchema, PushNotifications, Token, ActionPerformed } from '@capacitor/push-notifications';
 
 export default function Login() {
 
@@ -12,7 +13,7 @@ export default function Login() {
         const verify_token = localStorage.getItem('jwt')
         const verify_id = localStorage.getItem('uid')
 
-        if(verify_id && verify_token){
+        if (verify_id && verify_token) {
             history.push('/chats')
         }
     }, [])
@@ -30,6 +31,30 @@ export default function Login() {
     const goToChangePassword = () => {
         history.push("/check/account")
     }
+
+    useEffect(() => {
+        PushNotifications.checkPermissions().then(permission => {
+            if (permission.receive !== 'granted') {
+                PushNotifications.requestPermissions().then(permissionStatus => {
+                    if (permissionStatus.receive === 'denied') {
+                        alert('No podrás recivir notificaciones')
+                    } else {
+                        PushNotifications.addListener('registration', (token: Token) => {
+                            alert('Notificaciones activadas')
+                            localStorage.setItem('noti_token', String(token))
+                        })
+                    }
+                })
+            } else {
+                PushNotifications.addListener('registration', (token: Token) => {
+                    alert('Notificaciones activadas')
+                    localStorage.setItem('noti_token', String(token))
+                })
+            }
+        })
+
+        alert(localStorage.getItem('noti_token'))
+    }, [])
 
 
     async function onSignInPressed() {
@@ -61,8 +86,8 @@ export default function Login() {
             }
         } catch (error) {
             presentAlert({
-                header: 'Datos inválidos',
-                message: 'Llena los campos correctamente',
+                header: 'Error de conexión',
+                message: 'No se estableció conexión',
                 buttons: ['Aceptar'],
             })
         }
