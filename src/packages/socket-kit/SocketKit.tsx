@@ -5,8 +5,8 @@ import Environment from 'src/environment';
 
 const env = new Environment()
 
-const socket = io(`https://${env.PROP_SOCKET_URI}:3001`, {
-  transports: ['websocket'],
+const socket = io(`https://${env.PROP_SOCKET_URI}`, {
+  transports: ['polling']
 });
 
 export class SocketKit {
@@ -54,7 +54,7 @@ export class SocketKit {
   }
 
   async setNewUserConnected(user: any) {
-    
+
     const user_connections = {
       id: user.user_id,
       last_connection: null

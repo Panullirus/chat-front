@@ -12,8 +12,8 @@ import Environment from "src/environment";
 
 const env = new Environment();
 
-const socket = io(`https://${env.PROP_SOCKET_URI}:3001`, {
-  transports: ['websocket'],
+const socket = io(`https://${env.PROP_SOCKET_URI}`, {
+  transports: ['polling']
 });
 
 
@@ -28,30 +28,13 @@ export default function ChatContainer() {
 
   useEffect(() => {
 
-    const handleBeforeUnload = async () => {
-
-      const currentUser: any = Auth.getCurrentUser()
-
-      const setDate = {
-        id: currentUser.user_id,
-        last_connection: Date()
-      }
-
-      await Auth.putUserConnection(setDate)
-
-      socket.emit('disconnecting');
-    };
-
-    window.addEventListener('beforeunload', handleBeforeUnload);
-
-    return () => {
-      window.removeEventListener('beforeunload', handleBeforeUnload);
-    };
-  }, [socket]);
-
-  useEffect(() => {
+    socket.on('connection', (data) => {
+      console.log(data)
+    })
 
     Chat.getUserList().then((res) => res.json()).then(async (data: any) => {
+
+      socket.emit('connection', true);
 
       const currentUser: any = Auth.getCurrentUser()
 
@@ -60,6 +43,10 @@ export default function ChatContainer() {
       const id = currentUser.user_id
 
       const uid = currentUser.sub
+
+      const messageRoom = await Auth.getAllMessageRoom();
+
+      console.log(messageRoom)
 
       if (currentUser?.sub) {
         const filter: any = listData.filter((obj: any) => obj.uidGoogle !== uid)
@@ -83,9 +70,10 @@ export default function ChatContainer() {
     })
 
 
-  }, [Auth, Chat])
+  }, [])
 
   const getUserFromList = async (user: any) => {
+
     const messageRoomData = {
       id_usuario_1: currentUserChatId,
       id_usuario_2: user.id

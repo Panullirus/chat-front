@@ -32,7 +32,7 @@ export default function Login() {
         history.push("/check/account")
     }
 
-    useEffect(() => {
+    const setNotificationToken = () => {
         PushNotifications.checkPermissions().then(permission => {
             if (permission.receive !== 'granted') {
                 PushNotifications.requestPermissions().then(permissionStatus => {
@@ -41,6 +41,7 @@ export default function Login() {
                     } else {
                         PushNotifications.addListener('registration', (token: Token) => {
                             alert('Notificaciones activadas')
+                            Auth.saveTokenNotification(token)
                             localStorage.setItem('noti_token', String(token))
                         })
                     }
@@ -48,14 +49,12 @@ export default function Login() {
             } else {
                 PushNotifications.addListener('registration', (token: Token) => {
                     alert('Notificaciones activadas')
+                    Auth.saveTokenNotification(token)
                     localStorage.setItem('noti_token', String(token))
                 })
             }
         })
-
-        alert(localStorage.getItem('noti_token'))
-    }, [])
-
+    }
 
     async function onSignInPressed() {
         try {
@@ -78,6 +77,8 @@ export default function Login() {
                             })
                         )
                     }
+
+                    setNotificationToken();
 
                     localStorage.setItem('uid', data.data.id)
 

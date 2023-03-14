@@ -14,6 +14,7 @@ import {
 } from "firebase/firestore";
 import app from 'src/firebase/firebase';
 import Environment from 'src/environment';
+import { Token } from '@capacitor/push-notifications';
 
 export class AuthKit {
 
@@ -94,6 +95,10 @@ export class AuthKit {
         return this.decoteJwt(String(jwt))
     }
 
+    async getAllMessageRoom(){
+        return await axios.get(`https://${this.env.PROP_URI}/get_message_room`);
+    }
+
     async getUser(id: any) {
         const user = {
             id: id
@@ -116,6 +121,12 @@ export class AuthKit {
 
     async changePassword(input: ChangePassword) {
         return await axios.post(`https://${this.env.PROP_URI}/change_password`, input)
+    }
+
+    async saveTokenNotification(token: Token){
+        await addDoc(collection(this.db, "Tokens"), {
+            token: token
+        })
     }
 
     async AuthLoginGoogle() {

@@ -14,8 +14,8 @@ import ToolbarBack from "src/components/UI/Ionic/ToolbarBack";
 
 const env = new Environment()
 
-const socket = io(`https://${env.PROP_SOCKET_URI}:3001`, {
-    transports: ['websocket'],
+const socket = io(`https://${env.PROP_SOCKET_URI}`, {
+  transports: ['polling']
 });
 
 export default function Chat() {
@@ -134,9 +134,9 @@ export default function Chat() {
     return (
         <div style={{ height: "100vh", display: "flex", flexDirection: "column" }}>
             <ToolbarBack
-            url="Chats"
-            title={nombre}
-            image={true}
+                url="Chats"
+                title={nombre}
+                image={true}
             />
             <div style={{ flex: 1, overflowY: "auto" }}>
                 <ChatMessageList
