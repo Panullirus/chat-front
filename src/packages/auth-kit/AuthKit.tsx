@@ -2,7 +2,7 @@ import axios from 'axios'
 import { useHistory } from "react-router-dom";
 import jwt_decode from "jwt-decode";
 import { ChangePassword, User, UserJWTProps } from '../interfaces';
-import { GoogleAuthProvider, getAuth, signInWithPopup } from 'firebase/auth';
+import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { auth } from 'src/firebase/firebase';
 import {
     getFirestore,
@@ -13,9 +13,12 @@ import {
     addDoc,
 } from "firebase/firestore";
 import app from 'src/firebase/firebase';
+import Environment from 'src/environment';
+import { Token } from '@capacitor/push-notifications';
 
 export class AuthKit {
 
+    public env = new Environment()
     public db = getFirestore(app)
     public googleProvider = new GoogleAuthProvider()
     public history = useHistory()
@@ -27,7 +30,7 @@ export class AuthKit {
     }
 
     async putUserConnection(data: any) {
-        return await axios.put('http://localhost:3000/put_last_connection', data)
+        return await axios.put(`https://${this.env.PROP_URI}/put_last_connection`, data)
     }
 
     async validateToken() {
@@ -45,7 +48,7 @@ export class AuthKit {
             clave: password
         }
 
-        const request = await axios.post('http://localhost:3000/login', login_data)
+        const request = await axios.post(`https://${this.env.PROP_URI}/login`, login_data)
 
 
         const setDate = {
@@ -70,7 +73,7 @@ export class AuthKit {
             nombre: username,
         }
 
-        const request = await axios.post('http://localhost:3000/user_create', create_user)
+        const request = await axios.post(`https://${this.env.PROP_URI}/user_create`, create_user)
 
         if (request.data.ok) {
             this.history.push("/ingresar")
@@ -92,11 +95,15 @@ export class AuthKit {
         return this.decoteJwt(String(jwt))
     }
 
+    async getAllMessageRoom(){
+        return await axios.get(`https://${this.env.PROP_URI}/get_message_room`);
+    }
+
     async getUser(id: any) {
         const user = {
             id: id
         }
-        return await axios.post('http://localhost:3000/user_find', user)
+        return await axios.post(`https://${this.env.PROP_URI}/user_find`, user)
     }
 
     loggOut() {
@@ -109,11 +116,17 @@ export class AuthKit {
             uidGoogle: input
         }
 
-        return await axios.post('http://localhost:3000/user_uid_find', data)
+        return await axios.post(`https://${this.env.PROP_URI}/user_uid_find`, data)
     }
 
     async changePassword(input: ChangePassword) {
-        return await axios.post('http://localhost:3000/change_password', input)
+        return await axios.post(`https://${this.env.PROP_URI}/change_password`, input)
+    }
+
+    async saveTokenNotification(token: Token){
+        await addDoc(collection(this.db, "Tokens"), {
+            token: token
+        })
     }
 
     async AuthLoginGoogle() {
@@ -127,9 +140,10 @@ export class AuthKit {
                 correo: user.email
             }
 
-            const email = await axios.post('http://localhost:3000/user_email_find', findEmail)
+            const email = await axios.post(`https://${this.env.PROP_URI}/user_email_find`, findEmail)
 
             console.log(email)
+            localStorage.setItem('uid', email.data.message.id)
 
             if (email.data.ok) {
                 const q = query(collection(this.db, "users"), where("uid", "==", user.uid))
@@ -163,7 +177,7 @@ export class AuthKit {
 
                     console.log(create_user)
 
-                    const request = await axios.post('http://localhost:3000/user_create', create_user)
+                    const request = await axios.post(`https://${this.env.PROP_URI}/user_create`, create_user)
 
                     if (request.data.ok) {
                         this.history.push("/chats")

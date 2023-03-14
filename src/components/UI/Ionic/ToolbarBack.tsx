@@ -14,7 +14,7 @@ export default function ToolbarBack(props: ToolbarProps): JSX.Element {
     const history = useHistory();
 
     const goChats = () => {
-        history.push("/chats")
+        history.push(`/${props.url}`)
     }
 
     return (
@@ -23,8 +23,14 @@ export default function ToolbarBack(props: ToolbarProps): JSX.Element {
                 <IonButton onClick={goChats}>
                     <IonIcon icon={arrowBack}></IonIcon>
                 </IonButton>
+                {props.image ? <img src={"https://picsum.photos/80/80?random=" + 1} alt="perfil" style={{
+                        borderRadius: 50,
+                        height: 40
+                    }}/> : null}
                 <IonTitle>
-                    <span>
+                    <span style={{
+                        alignItems: 'center'
+                    }}>
                         {props.title}
                     </span>
                 </IonTitle>

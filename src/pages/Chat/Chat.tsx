@@ -3,16 +3,19 @@ import { AuthKit } from "../../packages/auth-kit/AuthKit"
 import { ChatKit } from "../../packages/chat-kit/ChatKit";
 import { useLocation } from "react-router";
 import './main.css'
-import { HistoryRoute, MessageContent, MessageSocketContent } from "../../packages/interfaces";
+import { ChatInputProps, HistoryRoute, MessageContent, MessageSocketContent } from "../../packages/interfaces";
 import ToolbarChats from "src/components/UI/Chat/ToolbarChats";
 import ChatMessageList from "src/components/UI/Chat/ChatMessageList";
 import ChatInput from "src/components/UI/Chat/ChatInput";
-import ChatFlatList from "src/components/UI/Chat/ChatFlatList";
 import { SocketKit } from "src/packages/socket-kit/SocketKit";
 import io from 'socket.io-client';
+import Environment from "src/environment";
+import ToolbarBack from "src/components/UI/Ionic/ToolbarBack";
 
-const socket = io('http://localhost:3001', {
-    transports: ['websocket'],
+const env = new Environment()
+
+const socket = io(`https://${env.PROP_SOCKET_URI}`, {
+  transports: ['polling']
 });
 
 export default function Chat() {
@@ -32,10 +35,15 @@ export default function Chat() {
     const [correo, setCorreo] = useState('')
     const [lastConnection, setLastConnection] = useState('')
     const [items, setItems] = useState<string[]>([])
+    const [isTyping, setIsTyping] = useState(false)
+    const [dataTyping, setDataTyping] = useState<any>()
+    const [chatRoomData, setChatRoomData] = useState<any>()
 
     const getChats = async () => {
 
         const data_from_chats: HistoryRoute = chat
+
+        setChatRoomData(data_from_chats.state.data.message)
 
         const user_data: any = await Auth.getCurrentUser()
 
@@ -43,13 +51,12 @@ export default function Chat() {
             const idGoogelChat = await Auth.getGoogleIdChat(user_data?.sub)
 
             setUser(idGoogelChat.data.message.id)
-        }else{
+        } else {
             setUser(user_data.user_id)
         }
 
         setChatRoom(data_from_chats.state.data.message.id)
         setNombre(data_from_chats.state.data.user_to_data.nombre)
-        setCorreo(data_from_chats.state.data.user_to_data.correo)
 
         const chatRoomID = data_from_chats.state.data.message.id
 
@@ -72,8 +79,6 @@ export default function Chat() {
         let isCancelled = false
 
         if (!isCancelled) {
-
-            const data_from_chats: HistoryRoute = chat
 
             socket.on('message_data', (message: MessageSocketContent) => {
 
@@ -124,17 +129,16 @@ export default function Chat() {
         }
     }
 
+
+
     return (
-        <div className="App">
-            <ToolbarChats
-                key={0}
-                backButton={true}
-                backButtonName={"chats"}
+        <div style={{ height: "100vh", display: "flex", flexDirection: "column" }}>
+            <ToolbarBack
+                url="Chats"
                 title={nombre}
+                image={true}
             />
-            <ChatFlatList
-                key={3}
-            >
+            <div style={{ flex: 1, overflowY: "auto" }}>
                 <ChatMessageList
                     key={1}
                     messages={messages}
@@ -142,13 +146,41 @@ export default function Chat() {
                     currentUser={Number(user)}
                     loading={loading}
                 />
+            </div>
+            <div style={{ position: "sticky", bottom: 0 }}>
                 <ChatInput
+                    dataTyping={dataTyping}
+                    currentUser={user}
                     key={2}
                     value={messageInput}
                     onChange={handleChange}
                     onKeyDown={handleKeyDown}
+                    onPress={sendMessageToServer}
                 />
-            </ChatFlatList>
+            </div>
         </div>
+        // <div>
+        //     <ToolbarChats
+        //         key={0}
+        //         backButton={true}
+        //         backButtonName={"chats"}
+        //         title={nombre}
+        //     />
+        //     <div>
+        //         <ChatMessageList
+        //             key={1}
+        //             messages={messages}
+        //             contentRef={contentRef}
+        //             currentUser={Number(user)}
+        //             loading={loading}
+        //         />
+        //         <ChatInput
+        //             key={2}
+        //             value={messageInput}
+        //             onChange={handleChange}
+        //             onKeyDown={handleKeyDown}
+        //         />
+        //     </div>
+        // </div>
     )
 }

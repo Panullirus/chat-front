@@ -1,9 +1,12 @@
 import axios from 'axios';
-import { LastMessageChat, MessageSocketContent, UserJWTProps, UserUpdateDataProps } from '../interfaces';
+import { MessageSocketContent, UserJWTProps, UserUpdateDataProps } from '../interfaces';
 import io from 'socket.io-client';
+import Environment from 'src/environment';
 
-const socket = io('http://localhost:3001', {
-  transports: ['websocket'],
+const env = new Environment()
+
+const socket = io(`https://${env.PROP_SOCKET_URI}`, {
+  transports: ['polling']
 });
 
 export class SocketKit {
@@ -51,12 +54,12 @@ export class SocketKit {
   }
 
   async setNewUserConnected(user: any) {
-    
+
     const user_connections = {
       id: user.user_id,
       last_connection: null
     }
 
-    return axios.post('http://localhost:3000/user_connected', user_connections);
+    return axios.post(`https://${env.PROP_URI}:3000/user_connected`, user_connections);
   }
 }

@@ -2,11 +2,11 @@ import axios from 'axios'
 import { useHistory } from 'react-router';
 import { AuthKit } from '../auth-kit/AuthKit'
 import moment from 'moment'
-
+import Environment from 'src/environment';
 export class ChatKit {
 
     public history = useHistory()
-
+    public env = new Environment()
     public Auth = new AuthKit();
 
     async calculateDiffDays(date: string) {
@@ -53,28 +53,28 @@ export class ChatKit {
     }
 
     async getUserList() {
-        return fetch('http://localhost:3000/get_users')
+        return fetch(`https://${this.env.PROP_URI}/get_users`)
     }
 
     async verifyMessageRoom(messageRoomData: any) {
-        return await axios.post('http://localhost:3000/find_message_room', messageRoomData)
+        return await axios.post(`https://${this.env.PROP_URI}/find_message_room`, messageRoomData)
     }
 
     async createMessageRoom(messageRoomData: any) {
-        return await axios.post('http://localhost:3000/create_message_room', messageRoomData)
+        return await axios.post(`https://${this.env.PROP_URI}/create_message_room`, messageRoomData)
 
     }
 
     async getAllMessage(conversaciones_id: any) {
-        return await axios.post('http://localhost:3000/get_all_message', conversaciones_id)
+        return await axios.post(`https://${this.env.PROP_URI}/get_all_message`, conversaciones_id)
     }
 
 
     async sendMessage(message: any) {
-        return await axios.post('http://localhost:3000/send_message', message)
+        return await axios.post(`https://${this.env.PROP_URI}/send_message`, message)
     }
 
     async updateUser(user_data: any){
-        return await axios.post('http://localhost:3000/update_user', user_data)
+        return await axios.post(`https://${this.env.PROP_URI}/update_user`, user_data)
     }
 }
