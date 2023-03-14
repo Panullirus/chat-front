@@ -83,10 +83,6 @@ export default function Register() {
         }
     }
 
-    const getDataForm = (email: any, value: any) => {
-        setDataForm({ ...dataForm, [email]: value })
-    }
-
     return (
         <div>
             <ToolbarBack 

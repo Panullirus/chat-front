@@ -1,12 +1,22 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { AuthKit } from '../../packages/auth-kit/AuthKit';
 import { useIonAlert } from '@ionic/react';
 import { useHistory } from 'react-router-dom';
 import { IonButton } from '@ionic/react';
 import { IonItem, IonLabel, IonInput, } from '@ionic/react';
 import LoginFirebase from './LoginFirebase';
+import { PushNotificationSchema, PushNotifications, Token, ActionPerformed } from '@capacitor/push-notifications';
 
 export default function Login() {
+
+    useEffect(() => {
+        const verify_token = localStorage.getItem('jwt')
+        const verify_id = localStorage.getItem('uid')
+
+        if (verify_id && verify_token) {
+            history.push('/chats')
+        }
+    }, [])
 
     const history = useHistory()
 
@@ -22,6 +32,29 @@ export default function Login() {
         history.push("/check/account")
     }
 
+    const setNotificationToken = () => {
+        PushNotifications.checkPermissions().then(permission => {
+            if (permission.receive !== 'granted') {
+                PushNotifications.requestPermissions().then(permissionStatus => {
+                    if (permissionStatus.receive === 'denied') {
+                        alert('No podrás recivir notificaciones')
+                    } else {
+                        PushNotifications.addListener('registration', (token: Token) => {
+                            alert('Notificaciones activadas')
+                            Auth.saveTokenNotification(token)
+                            localStorage.setItem('noti_token', String(token))
+                        })
+                    }
+                })
+            } else {
+                PushNotifications.addListener('registration', (token: Token) => {
+                    alert('Notificaciones activadas')
+                    Auth.saveTokenNotification(token)
+                    localStorage.setItem('noti_token', String(token))
+                })
+            }
+        })
+    }
 
     async function onSignInPressed() {
         try {
@@ -45,13 +78,17 @@ export default function Login() {
                         )
                     }
 
+                    setNotificationToken();
+
+                    localStorage.setItem('uid', data.data.id)
+
                     history.push("/chats")
                 })
             }
         } catch (error) {
             presentAlert({
-                header: 'Datos inválidos',
-                message: 'Llena los campos correctamente',
+                header: 'Error de conexión',
+                message: 'No se estableció conexión',
                 buttons: ['Aceptar'],
             })
         }
@@ -60,10 +97,10 @@ export default function Login() {
 
 
     return (
-        <div style={{
-            marginTop: '120px',
+        <div className='form' style={{
             display: 'grid',
             placeItems: 'center',
+            paddingTop: 70
         }}>
             <img src="https://cdn-icons-png.flaticon.com/512/9263/9263544.png" alt="login" height={150} />
             <br />

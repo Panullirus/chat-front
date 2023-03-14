@@ -36,11 +36,15 @@ export default function ChatUserList(props: UserChatList): JSX.Element {
       </IonThumbnail>
       <div>
         <IonLabel>
-          <span style={{
+          <p style={{
             color: "#1d305d",
             fontWeight: 'bolder',
-            fontSize: 20
-          }}>{props.name}</span>
+            fontSize: 20,
+            overflow: 'hidden',
+            whiteSpace: 'nowrap',
+            textOverflow: 'ellipsis',
+            width: 150
+          }}>{props.name}</p>
         </IonLabel>
         <br />
         <IonLabel>{props?.last_message}</IonLabel>
