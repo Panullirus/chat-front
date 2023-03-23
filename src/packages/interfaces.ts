@@ -69,6 +69,7 @@ export interface ToolbarChat{
     backButton?: boolean
     backButtonName?: string
     endIcon?: string
+    isLoading?: boolean
 }
 
 export interface AlertProps {

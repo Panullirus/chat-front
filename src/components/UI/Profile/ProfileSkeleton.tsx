@@ -5,11 +5,8 @@ import {
     IonSkeletonText,
     IonToolbar,
     IonButtons,
-    IonTitle,
     IonButton,
-    IonBackButton
 } from '@ionic/react';
-import ToolbarBack from "../Ionic/ToolbarBack";
 
 export default function ProfileSkeleton(): JSX.Element {
 

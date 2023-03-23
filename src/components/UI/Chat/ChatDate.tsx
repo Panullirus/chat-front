@@ -1,7 +1,5 @@
 import { DateChat } from "src/packages/interfaces";
 
-
-
 export default function ChatWithDaySeparator(props: DateChat): JSX.Element {
 
     return (

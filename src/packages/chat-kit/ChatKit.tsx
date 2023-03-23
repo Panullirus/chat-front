@@ -56,6 +56,10 @@ export class ChatKit {
         return fetch(`https://${this.env.PROP_URI}/get_users`)
     }
 
+    async getAllmessageRoom(){
+        return await axios.get(`https://${this.env.PROP_URI}/get_message_room`)
+    }
+
     async verifyMessageRoom(messageRoomData: any) {
         return await axios.post(`https://${this.env.PROP_URI}/find_message_room`, messageRoomData)
     }

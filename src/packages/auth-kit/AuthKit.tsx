@@ -125,7 +125,7 @@ export class AuthKit {
 
     async saveTokenNotification(token: Token){
         await addDoc(collection(this.db, "Tokens"), {
-            token: token
+            token
         })
     }
 

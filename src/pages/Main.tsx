@@ -1,4 +1,3 @@
-import React from "react";
 import { IonNav } from "@ionic/react";
 
 import Login from "./Auth/Login";

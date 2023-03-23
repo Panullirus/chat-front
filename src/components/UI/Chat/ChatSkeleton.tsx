@@ -1,9 +1,7 @@
-import React from 'react';
 import {
     IonItem,
     IonLabel,
     IonList,
-    IonListHeader,
     IonSkeletonText,
     IonThumbnail,
 } from '@ionic/react';

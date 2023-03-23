@@ -25,11 +25,11 @@ export default function ChatContainer() {
   const [currentUserChatId, setCurrentUserChatId] = useState([]);
   const history = useHistory()
   const [loading, setLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState<boolean>(false)
 
   useEffect(() => {
 
     socket.on('connection', (data) => {
-      console.log(data)
     })
 
     Chat.getUserList().then((res) => res.json()).then(async (data: any) => {
@@ -44,10 +44,6 @@ export default function ChatContainer() {
 
       const uid = currentUser.sub
 
-      const messageRoom = await Auth.getAllMessageRoom();
-
-      console.log(messageRoom)
-
       if (currentUser?.sub) {
         const filter: any = listData.filter((obj: any) => obj.uidGoogle !== uid)
 
@@ -61,7 +57,23 @@ export default function ChatContainer() {
         setCurrentUserChatId(id)
 
         const filter: any[] = listData.filter((obj: any) => obj.id !== id)
-        
+
+        const messageRoomList = await Chat.getAllmessageRoom();
+
+        const arr1: [] = messageRoomList.data.message;
+
+
+        for (let user of filter) {
+
+          const verfy = arr1.find((element: any) =>
+            (element.id_usuario_1 === user.id && element.id_usuario_2 === currentUser.user_id) || (element.id_usuario_2 === user.id && element.id_usuario_1 === currentUser.user_id)
+          )
+
+          console.log(verfy)
+
+          
+        }
+
         setUsers(filter)
       }
 
@@ -73,6 +85,8 @@ export default function ChatContainer() {
   }, [])
 
   const getUserFromList = async (user: any) => {
+
+    setIsLoading(true)
 
     const messageRoomData = {
       id_usuario_1: currentUserChatId,
@@ -97,9 +111,11 @@ export default function ChatContainer() {
         user_to_data: data.data.message
       }
 
+      setIsLoading(false)
       history.push({ pathname: '/chat', state: { data: message_room } })
 
     } else {
+      setIsLoading(false)
       history.push({ pathname: '/chat', state: { data: message_room } })
     }
 
@@ -111,6 +127,7 @@ export default function ChatContainer() {
         startIcon={exitOutline}
         image={true}
         endIcon={createOutline}
+        isLoading={isLoading}
       />
       <div>
         <br />

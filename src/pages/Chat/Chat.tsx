@@ -1,10 +1,9 @@
-import { createRef, useCallback, useEffect, useState } from "react"
+import { createRef, useEffect, useState } from "react"
 import { AuthKit } from "../../packages/auth-kit/AuthKit"
 import { ChatKit } from "../../packages/chat-kit/ChatKit";
 import { useLocation } from "react-router";
 import './main.css'
-import { ChatInputProps, HistoryRoute, MessageContent, MessageSocketContent } from "../../packages/interfaces";
-import ToolbarChats from "src/components/UI/Chat/ToolbarChats";
+import { HistoryRoute, MessageContent, MessageSocketContent } from "../../packages/interfaces";
 import ChatMessageList from "src/components/UI/Chat/ChatMessageList";
 import ChatInput from "src/components/UI/Chat/ChatInput";
 import { SocketKit } from "src/packages/socket-kit/SocketKit";
@@ -24,26 +23,16 @@ export default function Chat() {
     const Auth = new AuthKit()
     const Socket = new SocketKit()
     const Chat = new ChatKit()
-    const [chat, setChat] = useState(data)
     const [messages, setMessages] = useState<any[]>([])
-    const [newMessages, setNewMessages] = useState<any>()
     const [messageInput, setMessageInput] = useState('')
     const [user, setUser] = useState<number>()
     const [chatRoom, setChatRoom] = useState<number>(0)
     const [loading, setLoading] = useState(false)
     const [nombre, setNombre] = useState('')
-    const [correo, setCorreo] = useState('')
-    const [lastConnection, setLastConnection] = useState('')
-    const [items, setItems] = useState<string[]>([])
-    const [isTyping, setIsTyping] = useState(false)
-    const [dataTyping, setDataTyping] = useState<any>()
-    const [chatRoomData, setChatRoomData] = useState<any>()
 
     const getChats = async () => {
 
-        const data_from_chats: HistoryRoute = chat
-
-        setChatRoomData(data_from_chats.state.data.message)
+        const data_from_chats: HistoryRoute = data;
 
         const user_data: any = await Auth.getCurrentUser()
 
@@ -64,13 +53,9 @@ export default function Chat() {
 
         const messages_container = await Chat.setMessages(chatRoomID)
 
-        const getLastConnection = await Chat.calculateDiffDays(data_from_chats.state.data.user_to_data.last_connection)
-
-        setLastConnection(getLastConnection)
+        console.log(messages_container)
 
         setMessages(messages_container)
-
-        setItems(prevItems => [...prevItems, newMessages])
 
         setLoading(true)
     }
@@ -81,6 +66,12 @@ export default function Chat() {
         if (!isCancelled) {
 
             socket.on('message_data', (message: MessageSocketContent) => {
+
+                if(message.conversaciones_id !== chatRoom){
+                    return
+                }else{
+                    console.log(message)
+                }
 
                 getChats()
 
@@ -149,7 +140,6 @@ export default function Chat() {
             </div>
             <div style={{ position: "sticky", bottom: 0 }}>
                 <ChatInput
-                    dataTyping={dataTyping}
                     currentUser={user}
                     key={2}
                     value={messageInput}

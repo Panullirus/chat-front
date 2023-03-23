@@ -3,8 +3,7 @@ import { UserUpdateDataProps } from "src/packages/interfaces"
 import { IonButton } from '@ionic/react';
 import { useEffect, useState } from "react";
 import { ChatKit } from "src/packages/chat-kit/ChatKit";
-import { useIonAlert } from '@ionic/react';
-import { useHistory, useLocation } from "react-router";
+import { useHistory } from "react-router";
 
 export default function ProfileInputs(props: UserUpdateDataProps): JSX.Element {
 
@@ -22,8 +21,13 @@ export default function ProfileInputs(props: UserUpdateDataProps): JSX.Element {
     }, [props]);
 
     const goToChangePassword = () => {
-        history.push({pathname: "/contraseña", state: { data: email }})
+        history.push({ pathname: "/contraseña", state: { data: email } })
     }
+
+    const openLink = () => {
+        const url = 'https://drive.google.com/file/d/17pMzpmgkZ56VI0Y2EibBphtwQtNu1HV4/view?usp=sharing';
+        window.open(url, '_blank');
+      };
 
     const getData = async () => {
         const user_data: UserUpdateDataProps = {
@@ -74,6 +78,12 @@ export default function ProfileInputs(props: UserUpdateDataProps): JSX.Element {
                 cursor: 'pointer'
             }} onClick={goToChangePassword}>
                 <span>Cambiar la contraseña</span>
+            </div>
+            <div style={{
+                paddingTop: 25,
+                cursor: 'pointer'
+            }} onClick={openLink}>
+                <span>Descargar apk</span>
             </div>
         </div>
     )

@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { IonButtons, IonButton, IonModal, IonHeader, IonContent, IonToolbar, IonTitle, IonPage } from '@ionic/react';
+import { useState } from 'react';
+import { IonButtons, IonButton, IonModal, IonHeader, IonContent, IonToolbar, IonTitle, } from '@ionic/react';
 
 export default function TyC(): JSX.Element {
 

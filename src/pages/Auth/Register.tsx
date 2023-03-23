@@ -7,9 +7,13 @@ import { IonInput, IonItem, IonLabel } from '@ionic/react';
 import ToolbarBack from "src/components/UI/Ionic/ToolbarBack";
 import TyC from "../Profile/TyC";
 import axios from "axios";
+import Environment from "src/environment";
+
 export default function Register() {
 
     const [presentAlert] = useIonAlert()
+
+    const env = new Environment()
 
     const Auth = new AuthKit()
 
@@ -35,11 +39,11 @@ export default function Register() {
             correo: email
         }
 
-        const check_email = await axios.post('http://localhost:3000/user_email_find', findEmail)
+        const check_email = await axios.post(`https://${env.PROP_URI}/user_email_find`, findEmail)
 
-        if(check_email.data.ok){
+        if (check_email.data.ok) {
             alert('Correo ya registrado')
-        }else{
+        } else {
             try {
                 if (!Auth.validateEmail(email)) {
                     return (
@@ -63,7 +67,7 @@ export default function Register() {
             } catch (error) {
                 console.log(error)
             }
-    
+
         }
     }
 
@@ -85,19 +89,17 @@ export default function Register() {
 
     return (
         <div>
-            <ToolbarBack 
-            url="ingresar"
+            <ToolbarBack
+                url="ingresar"
             />
             <div style={{
-                paddingTop: '25px',
                 display: 'grid',
                 placeItems: 'center',
+                overflow: 'scroll'
             }}>
-            <img src="https://cdn-icons-png.flaticon.com/512/9263/9263537.png" alt="login" height={150} />
+                <img src="https://cdn-icons-png.flaticon.com/512/9263/9263537.png" alt="login" height={150} />
                 <br />
-                <div style={{
-                    paddingBottom: 10
-                }}>
+                <div>
                     <div>
                         <IonItem>
                             <IonLabel position="floating">Correo electrónico</IonLabel>
@@ -130,7 +132,7 @@ export default function Register() {
                         paddingTop: 25
                     }}>
                         <IonItem>
-                            <IonLabel position="floating">Confiram tu contraseña</IonLabel>
+                            <IonLabel position="floating">Confirma tu contraseña</IonLabel>
                             <IonInput placeholder="Contraseña123" type="password" onBlur={() => validatePasswords(password, secondPassword)} onIonInput={(e: any) => setSecondPassword(e.target.value)}></IonInput>
                         </IonItem>
                         {secondPasswordError && <p style={{
@@ -139,11 +141,11 @@ export default function Register() {
                         }}>{secondPasswordError}</p>}
                         <br />
                     </div>
-                    <TyC/>
+                    <TyC />
                     <IonButton
-                    onClick={() => onSignUpPressed()} style={{
-                        width: "100%"
-                    }}>ENTRAR</IonButton>
+                        onClick={() => onSignUpPressed()} style={{
+                            width: "100%"
+                        }}>ENTRAR</IonButton>
                 </div>
             </div>
         </div>

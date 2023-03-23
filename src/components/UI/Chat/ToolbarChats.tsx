@@ -5,7 +5,8 @@ import {
     IonIcon,
     IonTitle,
     IonButton,
-    IonBackButton
+    IonBackButton,
+    IonProgressBar
 } from '@ionic/react';
 import { useHistory } from "react-router";
 
@@ -44,6 +45,7 @@ export default function ToolarChats(props: ToolbarChat): JSX.Element {
                     <IonIcon slot="icon-only" md={props.endIcon}></IonIcon>
                 </IonButton>
             </IonButtons>
+            {props?.isLoading ? <IonProgressBar type="indeterminate"></IonProgressBar> : null}
         </IonToolbar>
     )
 }

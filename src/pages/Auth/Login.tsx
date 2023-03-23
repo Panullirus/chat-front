@@ -5,7 +5,7 @@ import { useHistory } from 'react-router-dom';
 import { IonButton } from '@ionic/react';
 import { IonItem, IonLabel, IonInput, } from '@ionic/react';
 import LoginFirebase from './LoginFirebase';
-import { PushNotificationSchema, PushNotifications, Token, ActionPerformed } from '@capacitor/push-notifications';
+import { PushNotifications, Token } from '@capacitor/push-notifications';
 
 export default function Login() {
 
@@ -42,7 +42,6 @@ export default function Login() {
                         PushNotifications.addListener('registration', (token: Token) => {
                             alert('Notificaciones activadas')
                             Auth.saveTokenNotification(token)
-                            localStorage.setItem('noti_token', String(token))
                         })
                     }
                 })
@@ -50,7 +49,6 @@ export default function Login() {
                 PushNotifications.addListener('registration', (token: Token) => {
                     alert('Notificaciones activadas')
                     Auth.saveTokenNotification(token)
-                    localStorage.setItem('noti_token', String(token))
                 })
             }
         })
@@ -100,7 +98,7 @@ export default function Login() {
         <div className='form' style={{
             display: 'grid',
             placeItems: 'center',
-            paddingTop: 70
+            paddingTop: 10
         }}>
             <img src="https://cdn-icons-png.flaticon.com/512/9263/9263544.png" alt="login" height={150} />
             <br />
