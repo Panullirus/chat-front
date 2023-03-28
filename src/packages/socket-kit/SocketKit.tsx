@@ -62,4 +62,5 @@ export class SocketKit {
 
     return axios.post(`https://${env.PROP_URI}:3000/user_connected`, user_connections);
   }
+  
 }
