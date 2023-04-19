@@ -69,12 +69,13 @@ export default function Chat() {
 
                 console.log(message)
 
+                getChats()
+
                 if(message.conversaciones_id !== chatRoom){
                     return
                 }else{
                     console.log(message)
                 }
-                getChats()
             });
         }
 

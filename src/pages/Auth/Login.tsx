@@ -138,8 +138,6 @@ export default function Login() {
                         onClick={() => history.push("/registrarse")} style={{
                             width: "100%"
                         }}>REGISTRARSE</IonButton>
-                    <LoginFirebase
-                    />
                 </div>
             </div>
         </div>
