@@ -48,7 +48,7 @@ export interface ChatInputProps{
         nombre: string,
         id: number
     }
-    onKeyDown: (event: any) => void
+    onKeyDown?: (event: any) => void
     value: number | string | readonly string[]
     onChange: (event: any) => void
     onPress: () => void

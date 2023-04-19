@@ -64,29 +64,6 @@ export default function ChatMessageList(props: ChatMessageListProps): JSX.Elemen
                         ))
                     }
                 </>
-                {/* {
-                    props.messages.map((item: any, index) => {
-                        let date = new Date(item?.fecha_envio)
-                        let hours = date.getHours();
-                        let minutes = date.getMinutes()
-
-                        const hora_envio = `${hours}:${minutes}`
-
-                        return (
-                            <div ref={messagesEndRef}>
-                                <ChatMessageContainer
-                                    loading={true}
-                                    current_user={Number(props.currentUser)}
-                                    key={index}
-                                    contenido={item.contenido}
-                                    id_usuario_envia={item.id_usuario_envia}
-                                    fecha_envio={item}
-                                    hora_envio={hora_envio}
-                                />
-                            </div>
-                        )
-                    })
-                } */}
             </div> : <MessageSkeleton />}
         </IonContent>
     )

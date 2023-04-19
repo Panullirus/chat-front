@@ -24,11 +24,6 @@ export default function ChatInput(props: ChatInputProps): JSX.Element {
         <div style={{
             paddingBottom: 10
         }}>
-            {props.dataTyping?.nombre !== name ? null : <p style={{
-                paddingLeft: 20,
-                height: 5
-            }}>{props.dataTyping?.nombre} está escribiendo...</p>}
-            { }
             <IonItem>
                 <div>
                     <input placeholder="Escribe un mensaje..." id="inputID" value={props.value} onChange={props.onChange} style={{

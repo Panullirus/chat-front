@@ -67,14 +67,14 @@ export default function Chat() {
 
             socket.on('message_data', (message: MessageSocketContent) => {
 
+                console.log(message)
+
                 if(message.conversaciones_id !== chatRoom){
                     return
                 }else{
                     console.log(message)
                 }
-
                 getChats()
-
             });
         }
 
